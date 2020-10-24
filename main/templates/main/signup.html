@@ -3,15 +3,22 @@
 
 {% block content %}
 
-<h1>Create account</h1>
+{% if error %}
+<div class="alert alert-primary col-md-6 mx-auto mt-3" role="alert">
+  {{ error }}
+</div>
+{% endif %}
 
-<h2>{{ error }}</h2>
-
-{% load crispy_forms_tags %}
-<form method="post">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button type="submit" class="btn btn-primary">Sign Up</button>
-</form>
+<div class="card card-body col-md-6 mx-auto pt-4">
+    <h1 class="display-4 text-center">Create account</h1>
+    
+    {% load crispy_forms_tags %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary">Sign up</button>
+    </form>
+  
+</div>
 
 {% endblock %}
