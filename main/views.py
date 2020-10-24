@@ -23,3 +23,8 @@ def signup(request):
         except IntegrityError:
             # account with that email already exists
             return render(request, 'main/signup.html', {'form':CustomUserCreationForm(), 'error':'Account with that email already exists.'})
+
+def signout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
