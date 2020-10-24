@@ -4,6 +4,7 @@ from users.models import CustomUser
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from scripts.solvro_city import get_all_stops
 
 
 def home(request):
@@ -45,3 +46,6 @@ def signout(request):
     if request.method == 'POST':
         logout(request)
         return redirect('home')
+
+def stops(request):
+    return render(request, "main/stops.html", {'stops':get_all_stops()})

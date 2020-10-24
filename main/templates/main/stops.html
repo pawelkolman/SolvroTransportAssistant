@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+{% block title %}All stops{% endblock %}
+
+{% block content %}
+
+<div class="row">
+{% for stop in stops %}
+  <div class="col-md-6 py-3">
+    <div class="card card-body">{{ stop.stop_name }}</div>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}
