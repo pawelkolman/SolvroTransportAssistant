@@ -33,7 +33,7 @@ try:
     from .local_settings import *
 except ImportError:
     print('No local settings file.')
-
+    
 
 # Application definition
 
@@ -45,7 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+    'users',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -74,6 +78,8 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 WSGI_APPLICATION = 'SolvroTransportAssistant.wsgi.application'
 
