@@ -1,7 +1,9 @@
 import json
 
-def get_all_stops():
-    # return 'works'
-    with open("scripts/solvro_city.json", "r") as solvro_city_json:
-        solvro_city = json.load(solvro_city_json)
-    return solvro_city['nodes']
+# returns a json with all stops
+def get_all_stops(path):
+    solvro_city = json.load(open(path, 'r'))
+    output = []
+    for node in solvro_city['nodes']:
+        output.append({'name':node['stop_name']})
+    return json.dumps(output)

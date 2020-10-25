@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from users.forms import CustomUserCreationForm, CustomUserAuthenticationForm
 from users.models import CustomUser
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from scripts.solvro_city import get_all_stops
+import json
 
 
 def home(request):
@@ -48,4 +50,7 @@ def signout(request):
         return redirect('home')
 
 def stops(request):
-    return render(request, "main/stops.html", {'stops':get_all_stops()})
+    return render(request, "main/stops.html", {'stops':json.loads(get_all_stops("scripts/solvro_city.json"))})
+
+def stops_api(request):
+    return HttpResponse(get_all_stops("scripts/solvro_city.json"), content_type='application/json')

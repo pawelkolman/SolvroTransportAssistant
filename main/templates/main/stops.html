@@ -3,10 +3,12 @@
 
 {% block content %}
 
+<h1 class="display-4 text-center my-5">All stops in Solvro City</h1>
+
 <div class="row">
 {% for stop in stops %}
   <div class="col-md-6 py-3">
-    <div class="card card-body">{{ stop.stop_name }}</div>
+    <div class="card card-body">{{ stop.name }}</div>
   </div>
 {% endfor %}
 </div>
