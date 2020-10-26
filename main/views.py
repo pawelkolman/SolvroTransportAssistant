@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from users.forms import CustomUserCreationForm, CustomUserAuthenticationForm
 from users.models import CustomUser
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from scripts.solvro_city import get_all_stops
+from scripts.solvro_city import SolvroCity
 import json
 
 
@@ -50,7 +50,26 @@ def signout(request):
         return redirect('home')
 
 def stops(request):
-    return render(request, "main/stops.html", {'stops':json.loads(get_all_stops("scripts/solvro_city.json"))})
+    solvro = SolvroCity('scripts/solvro_city.json')
+    return render(request, "main/stops.html", {'stops':solvro.get_all_stops()})
 
 def stops_api(request):
-    return HttpResponse(get_all_stops("scripts/solvro_city.json"), content_type='application/json')
+    solvro = SolvroCity('scripts/solvro_city.json')
+    return HttpResponse(json.dumps(solvro.get_all_stops()), content_type='application/json')
+
+def shortest_route_api(request):
+    solvro = SolvroCity('scripts/solvro_city.json')
+    
+    try:
+        # validate GET parameters
+        source = request.GET.get('source')
+        target = request.GET.get('target')
+        
+        # check if stops exists
+        solvro.get_stop_id(source)
+        solvro.get_stop_id(target)
+        
+        # return json
+        return HttpResponse(json.dumps(solvro.get_shortest_route(source, target)), content_type='application/json')
+    except ValueError:
+        return HttpResponseBadRequest()
