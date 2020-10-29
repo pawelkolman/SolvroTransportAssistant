@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse, HttpResponseBadRequest
-from users.forms import CustomUserCreationForm, CustomUserAuthenticationForm
 from users.models import CustomUser
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from scripts.solvro_city import SolvroCity
 import json
+import re
 
 
 def home(request):
@@ -15,10 +16,13 @@ def home(request):
 def signup(request):
     if request.method == 'GET':
         # show sign up form
-        return render(request, 'main/signup.html', {'form':CustomUserCreationForm()})
+        return render(request, 'main/signup.html')
     else:
         # validate data
         try:
+        # validate e-mail
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", request.POST.get('email')):
+                raise ValidationError("wrong email")
         # add a new user
             user = CustomUser.objects.create_user(email=request.POST.get('email'), password=request.POST.get('password'))
             user.save()
@@ -26,18 +30,21 @@ def signup(request):
             return redirect('home')
         except IntegrityError:
             # account with that email already exists
-            return render(request, 'main/signup.html', {'form':CustomUserCreationForm(), 'error':'Account with that email already exists.'})
+            return render(request, 'main/signup.html', {'error':'Account with that email already exists.'})
+        except ValidationError:
+            # some fucker is trying to provide wrong data
+            return render(request, 'main/signup.html', {'error':'Wrong data provided.'})
 
 def signin(request):
     if request.method == 'GET':
         # show sign in form
-        return render(request, 'main/signin.html', {'form':CustomUserAuthenticationForm()})
+        return render(request, 'main/signin.html')
     else:
         # validate data
         user = authenticate(request, email=request.POST.get('email'), password=request.POST.get('password'))
         if user is None:
             # no user found
-            return render(request, 'main/signin.html', {'form':CustomUserAuthenticationForm(), 'error':'Username or password is wrong.'})
+            return render(request, 'main/signin.html', {'error':'Username or password is wrong.'})
         else:
             # data is correct
             login(request, user)

@@ -15,7 +15,16 @@
     {% load crispy_forms_tags %}
     <form method="post">
       {% csrf_token %}
-      {{ form|crispy }}
+      
+      <div class="form-group">
+        <label for="id_email">Email</label>
+        <input type="email" name="email" class="form-control" id="id_email">
+      </div>
+      
+      <div class="form-group">
+        <label for="id_password">Password</label>
+        <input type="password" name="password" class="form-control" id="id_password">
+      </div>
       
       <div class="text-center">
         <button type="submit" class="btn btn-primary">Sign up</button>
