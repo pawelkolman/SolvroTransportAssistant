@@ -57,8 +57,12 @@ class PK_Graph:
             neighbours[edge.start].add((edge.end, edge.weight))
         return neighbours
 
-    def dijkstra(self, source, destination):
+    def dijkstra(self, source, target):
         assert source in self.nodes, 'Such source node deos not exist'
+        
+        if source == target:
+            return {'route':[source], 'distance':0}
+        
         distances = {node: float('inf') for node in self.nodes}
         previous_nodes = {
             node: None for node in self.nodes
@@ -78,13 +82,13 @@ class PK_Graph:
                     distances[neighbour] = alternative_route
                     previous_nodes[neighbour] = current_node
 
-        current_node, route = destination, []
+        current_node, route = target, []
         while previous_nodes[current_node] is not None:
             route.insert(0, current_node)
             current_node = previous_nodes[current_node]
         if route:
             route.insert(0, current_node)
-        return {'route':route, 'distance':distances[destination]}
+        return {'route':route, 'distance':distances[target]}
 
 
 

@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+{% block title %}All stops{% endblock %}
+
+{% block content %}
+
+{% if shortest_route %}
+  <h1 class="display-4 text-center my-5">Shortest route</h1>
+
+  <div class="col-md-6 mx-auto">
+    {% for stop in shortest_route.stops %}
+      <div class="card card-body mb-3">{{ stop.name }}</div>
+    {% endfor %}
+  </div>
+
+  <h1 class="display-4 text-center my-5">Distance: {{ shortest_route.distance }}</h1>
+{% else %}
+  <h1 class="display-4 text-center my-5">Unfortunatelly, source and target are not connected.</h1>
+{% endif %}
+
+<div class="text-center">
+  <a class="btn btn-primary" href="{% url 'shortest_route' %}">Back</a>
+</div>
+
+{% endblock %}

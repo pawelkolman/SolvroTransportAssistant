@@ -57,10 +57,30 @@ def stops_api(request):
     solvro = SolvroCity('scripts/solvro_city.json')
     return HttpResponse(json.dumps(solvro.get_all_stops()), content_type='application/json')
 
-def shortest_route_api(request):
+def shortest_route(request):
     solvro = SolvroCity('scripts/solvro_city.json')
-    
+    if request.method == 'GET':
+        # show the form
+        return render(request, 'main/shortest_route_form.html', {'stops':solvro.get_all_stops()})
+    else:
+        try:
+            # validate source and target provided data
+            source = request.POST.get('source')
+            target = request.POST.get('target')
+            
+            # check if stops exists
+            solvro.get_stop_id(source)
+            solvro.get_stop_id(target)
+            
+            # return the shortest route with a distance
+            return render(request, 'main/shortest_route.html', {'shortest_route':solvro.get_shortest_route(source, target)})
+        except ValueError:
+            return render(request, 'main/shortest_route_form.html', {'error':'Wrong data provided.'})
+
+def shortest_route_api(request):    
     try:
+        solvro = SolvroCity('scripts/solvro_city.json')
+        
         # validate GET parameters
         source = request.GET.get('source')
         target = request.GET.get('target')

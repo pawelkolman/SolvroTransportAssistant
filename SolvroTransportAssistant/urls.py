@@ -25,5 +25,6 @@ urlpatterns = [
     path('signout', views.signout, name='signout'),
     path('stops', views.stops, name='stops'),
     path('api/stops', views.stops_api, name='stops_api'),
+    path('shortest_route', views.shortest_route, name='shortest_route'),
     path('api/path', views.shortest_route_api, name='shortest_route_api'),
 ]
