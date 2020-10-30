@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from scripts.solvro_city import SolvroCity
+from main.forms import FavouriteForm
 import json
 import re
 
@@ -80,7 +81,7 @@ def shortest_route(request):
             solvro.get_stop_id(target)
             
             # return the shortest route with a distance
-            return render(request, 'main/shortest_route.html', {'shortest_route':solvro.get_shortest_route(source, target)})
+            return render(request, 'main/shortest_route.html', {'shortest_route':solvro.get_shortest_route(source, target), 'source':source, 'target':target})
         except ValueError:
             return render(request, 'main/shortest_route_form.html', {'error':'Wrong data provided.'})
 
@@ -100,3 +101,15 @@ def shortest_route_api(request):
         return HttpResponse(json.dumps(solvro.get_shortest_route(source, target)), content_type='application/json')
     except ValueError:
         return HttpResponseBadRequest()
+
+@login_required
+def favourites(request):
+    if request.POST.get('operation') == 'add':
+        # try:
+            form = FavouriteForm(request.POST)
+            new_favourite = form.save(commit=False) # don't save yet, because we need to change the `user` field
+            new_favourite.user = request.user
+            new_favourite.save()
+            return redirect('home')
+        # except ValueError:
+            # return redirect('home')

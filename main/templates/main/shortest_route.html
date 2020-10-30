@@ -18,6 +18,14 @@
 {% endif %}
 
 <div class="text-center">
+  {% if shortest_route and user.is_authenticated %}
+    <form class="d-inline" method="post" action="{% url 'favourites' %}">
+      {% csrf_token %}
+      <input type="hidden" name="source" value="{{ source }}">
+      <input type="hidden" name="target" value="{{ target }}">
+      <button type="submit" name="operation" value="add" class="btn btn-outline-primary">Add to favourites</button>
+    </form>
+  {% endif %}
   <a class="btn btn-primary" href="{% url 'shortest_route' %}">Back</a>
 </div>
 
