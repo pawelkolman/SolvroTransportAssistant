@@ -6,7 +6,8 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from scripts.solvro_city import SolvroCity
-from main.forms import FavouriteForm
+from .forms import FavouriteForm
+from .models import Favourite
 import json
 import re
 
@@ -104,12 +105,18 @@ def shortest_route_api(request):
 
 @login_required
 def favourites(request):
+    if request.method == 'GET':
+        # show the list
+        favourites = Favourite.objects.filter(user=request.user)
+        return render(request, "main/favourites.html", {'favourites':favourites})
     if request.POST.get('operation') == 'add':
-        # try:
-            form = FavouriteForm(request.POST)
-            new_favourite = form.save(commit=False) # don't save yet, because we need to change the `user` field
-            new_favourite.user = request.user
-            new_favourite.save()
+        try:
+            # check if favourite doesn't exist already
+            if not Favourite.objects.filter(user=request.user, source=request.POST.get('source'), target=request.POST.get('target')):
+                form = FavouriteForm(request.POST)
+                new_favourite = form.save(commit=False) # don't save yet, because we need to change the `user` field
+                new_favourite.user = request.user
+                new_favourite.save()
+            return redirect('favourites')
+        except ValueError:
             return redirect('home')
-        # except ValueError:
-            # return redirect('home')

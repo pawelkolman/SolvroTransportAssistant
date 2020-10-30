@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+{% block title %}Favourites{% endblock %}
+
+{% block content %}
+
+
+{% if favourites %}
+  <h1 class="display-4 text-center my-5">Your favourites</h1>
+  {% for favourite in favourites %}
+    <form method="post" action="{% url 'shortest_route' %}">
+      {% csrf_token %}
+      <input type="hidden" name="source" value="{{ favourite.source }}">
+      <input type="hidden" name="target" value="{{ favourite.target }}">
+      <button type="submit" class="btn btn-lg d-block mb-3 mx-auto btn-outline-primary">{{ favourite.source }} - {{ favourite.target }}</button>
+    </form>
+  {% endfor %}
+{% else %}
+  <h1 class="display-4 text-center my-5">You don't have any favourites.</h1>
+{% endif %}
+
+{% endblock %}

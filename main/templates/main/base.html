@@ -25,7 +25,7 @@
       </nav>
       <nav>
         {% if user.is_authenticated %}
-        <a class="btn btn-outline-primary mr-2">{{ user }}</a>
+        <a class="btn btn-outline-primary mr-2" href="{% url 'favourites' %}">{{ user }}</a>
         <form class="d-inline" action="{% url 'signout' %}" method="POST">{% csrf_token %}<button type="submit" class="btn btn-primary">Sign out</button></form>
         
         {% else %}
