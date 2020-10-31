@@ -108,7 +108,7 @@ class SolvroCity:
     def __init__(self, path):
         self.solvro_map = json.load(open(path, 'r'))
     
-    # returns json with all stops
+    # returns all stops
     def get_all_stops(self):
         output = []
         for node in self.solvro_map['nodes']:
@@ -130,7 +130,7 @@ class SolvroCity:
                 return node['stop_name']
         raise ValueError('stop not found')
 
-    # returns json with shortest route between source and target
+    # returns shortest route and total distance between source and target
     def get_shortest_route(self, source_name, target_name):
         # check if source exists
         source_id = self.get_stop_id(source_name)
@@ -160,3 +160,12 @@ class SolvroCity:
             stops.append({'name':self.get_stop_name(stop_id)})
             
         return {'stops':stops, 'distance':dijkstra['distance']}
+    
+        
+    # returns all links
+    def get_all_links(self):
+        output = []
+        for link in self.solvro_map['links']:
+            # format the output
+            output.append({'source':self.get_stop_name(link['source']), 'target':self.get_stop_name(link['target']), 'distance':link['distance']})
+        return output

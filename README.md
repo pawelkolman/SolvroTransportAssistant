@@ -11,7 +11,6 @@
 - [Features](#features)
 - [API](#api)
 - [Problem solution](#solution)
-- [What next](#next)
 
 
 <a name="general"></a>
@@ -39,6 +38,7 @@ Live version of this app is available [here](https://SolvroTransportAssistant.py
 - Find the shortest route between two stops form and result preview
 - Shortest route API
 - Add and show favourites routes
+- City map graph visualization
 
 
 <a name="api"></a>
@@ -78,11 +78,3 @@ Available at [api/path](https://SolvroTransportAssistant.pythonanywhere.com/api/
 <a name="solution"></a>
 ## Solution
 Crucial code is located in [solvro_city.py](./main/scripts/solvro_city.py). The city map is an undirected weighted graph, therefore the shortest path can be determined with the Dijkstra's algorithm.
-
-
-<a name="next"></a>
-## What next
-Application can be further developed by adding
-- 'delete from favourites' feature
-- city map visualization
-- shortest path visualization

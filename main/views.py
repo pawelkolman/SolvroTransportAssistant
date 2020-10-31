@@ -120,3 +120,7 @@ def favourites(request):
             return redirect('favourites')
         except ValueError:
             return redirect('home')
+
+def map(request):
+    solvro = SolvroCity('scripts/solvro_city.json')
+    return render(request, "main/map.html", {'stops':solvro.get_all_stops(), 'links':solvro.get_all_links()})

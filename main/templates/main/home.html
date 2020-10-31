@@ -11,7 +11,14 @@
   <h1 class="display-4">Welcome to Solvro Transport Assistant</h1>
   <p class="lead">An amazing application that allows you to find the shortest route between two stops in Solvro City.</p>
 </div>
-  
-<a href="{% url 'shortest_route' %}" class="btn btn-lg btn-block btn-outline-primary col-md-6 mx-auto mb-3">Find the shortest route</a>
+
+<div class="row">
+  <div class="col-md-6">
+    <a href="{% url 'shortest_route' %}" class="btn btn-lg btn-block btn-outline-primary mb-3">Find the shortest route</a>
+  </div>
+  <div class="col-md-6">
+    <a href="{% url 'map' %}" class="btn btn-lg btn-block btn-outline-primary mb-3">Show Solvro City map</a>
+  </div>
+</div>
     
 {% endblock %}

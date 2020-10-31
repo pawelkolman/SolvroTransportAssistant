@@ -28,4 +28,5 @@ urlpatterns = [
     path('shortest_route', views.shortest_route, name='shortest_route'),
     path('api/path', views.shortest_route_api, name='shortest_route_api'),
     path('favourites', views.favourites, name='favourites'),
+    path('map', views.map, name='map'),
 ]
