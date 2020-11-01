@@ -156,7 +156,7 @@ var ggraph = (function() {
       .force("center", d3.forceCenter(element.width / 2, element.height / 2))
       .force('charge', d3.forceManyBody().strength(charge))
       .force("link", d3.forceLink().id(function(d) { return d.id; }).strength(link_strength)
-        .distance(250));
+        .distance(100));
 
     callbacks.push(function() {
       select(false, timeout);
