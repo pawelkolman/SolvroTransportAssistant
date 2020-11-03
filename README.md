@@ -77,4 +77,4 @@ Available at [api/path](https://SolvroTransportAssistant.pythonanywhere.com/api/
 
 <a name="solution"></a>
 ## Solution
-Crucial code is located in [solvro_city.py](./main/scripts/solvro_city.py). The city map is an undirected weighted graph, therefore the shortest path can be determined with the Dijkstra's algorithm.
+Crucial code is located in [solvro_city.py](./scripts/solvro_city.py). The city map is an undirected weighted graph, therefore the shortest path can be determined with the Dijkstra's algorithm.
