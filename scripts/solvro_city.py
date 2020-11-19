@@ -8,11 +8,11 @@ def make_edge(start, end, weight=1):
     return Edge(start, end, weight)
 
 
-class PK_Graph:
+class Graph:
     """A class used to handle graphs, containing shortest route algorithm."""
 
     def __init__(self, edges):
-        wrong_edges = [i for i in edges if len(i) not in [2, 3]]
+        wrong_edges = [edge for edge in edges if len(edge) not in [2, 3]]
         if wrong_edges:
             raise ValueError(f"Wrong edges detected: {wrong_edges}")
 
@@ -217,7 +217,7 @@ class SolvroCity:
         links = []
         for link in self.solvro_map["links"]:
             links.append([link["source"], link["target"], link["distance"]])
-        graph = PK_Graph(links)
+        graph = Graph(links)
 
         # find shortest route
         dijkstra = graph.dijkstra(source_id, target_id)
