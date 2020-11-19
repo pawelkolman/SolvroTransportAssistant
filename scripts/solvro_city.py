@@ -75,7 +75,7 @@ class Graph:
                     previous_nodes[neighbour] = current_node
 
         current_node, route = target, []
-        while previous_nodes[current_node] is not None:
+        while previous_nodes[current_node]:
             route.insert(0, current_node)
             current_node = previous_nodes[current_node]
         if route:
@@ -150,7 +150,10 @@ class SolvroCity:
         """
 
         for node in self.solvro_map["nodes"]:
-            if isinstance(name, str) and name.upper() == node["stop_name"].upper():
+            if (
+                isinstance(name, str)
+                and name.upper() == node["stop_name"].upper()
+            ):
                 return node["id"]
         raise ValueError("stop not found")
 
