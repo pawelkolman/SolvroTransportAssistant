@@ -134,7 +134,7 @@ var ggraph = (function() {
     width = element.width;
     height = element.height;
 
-    transform = {current: {k: 1, x: 0, y: 0}};
+    transform = {current: {k: 0, x: 0, y: 0}};
 
     svg = d3.select(root).append('svg');
 
@@ -156,7 +156,7 @@ var ggraph = (function() {
       .force("center", d3.forceCenter(element.width / 2, element.height / 2))
       .force('charge', d3.forceManyBody().strength(charge))
       .force("link", d3.forceLink().id(function(d) { return d.id; }).strength(link_strength)
-        .distance(100));
+        .distance(150));
 
     callbacks.push(function() {
       select(false, timeout);
@@ -212,7 +212,7 @@ var ggraph = (function() {
       return -10 * Math.sqrt(d.members[0].id.length);
     }
     else {
-      return -50;
+      return -5;
     }
   };
 
