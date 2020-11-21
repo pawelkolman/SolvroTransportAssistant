@@ -56,7 +56,7 @@ Available at [api/stops](https://SolvroTransportAssistant.pythonanywhere.com/api
 ]
 ```
 ### path
-Available at [api/path](https://SolvroTransportAssistant.pythonanywhere.com/api/path). Expects `source` and `target` as string GET parameters. Returns a JSON containing stops and total distance as in the example below:
+Available at [api/path](https://SolvroTransportAssistant.pythonanywhere.com/api/path?source=Przystanek%20Zdenerwowany%20programista&target=Przystanek%20Cudowny%20student%20PWr). Expects `source` and `target` as string GET parameters. Returns a JSON containing stops and total distance as in the example below:
 ```
 {
   "stops": [

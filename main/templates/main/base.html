@@ -26,11 +26,11 @@
       <nav>
         {% if user.is_authenticated %}
         <a class="btn btn-outline-primary mr-2" href="{% url 'favourites' %}">{{ user }}</a>
-        <form class="d-inline" action="{% url 'signout' %}" method="POST">{% csrf_token %}<button type="submit" class="btn btn-primary">Sign out</button></form>
+        <form class="d-inline" action="{% url 'users:signout' %}" method="POST">{% csrf_token %}<button type="submit" class="btn btn-primary">Sign out</button></form>
         
         {% else %}
-        <a class="btn btn-outline-primary mr-2" href="{% url 'signup' %}">Create account</a>
-        <a class="btn btn-primary" href="{% url 'signin' %}">Sign in</a>
+        <a class="btn btn-outline-primary mr-2" href="{% url 'users:signup' %}">Create account</a>
+        <a class="btn btn-primary" href="{% url 'users:signin' %}">Sign in</a>
         
         {% endif %}
       </nav>

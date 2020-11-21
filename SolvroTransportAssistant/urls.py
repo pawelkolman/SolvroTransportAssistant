@@ -14,19 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from main import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('signup', views.signup, name='signup'),
-    path('signin', views.signin, name='signin'),
-    path('signout', views.signout, name='signout'),
-    path('stops', views.stops, name='stops'),
-    path('api/stops', views.stops_api, name='stops_api'),
-    path('shortest_route', views.shortest_route, name='shortest_route'),
-    path('api/path', views.shortest_route_api, name='shortest_route_api'),
-    path('favourites', views.favourites, name='favourites'),
-    path('map', views.map, name='map'),
+    path("admin/", admin.site.urls),
+    path("", views.home, name="home"),
+    path("user/", include("users.urls")),
+    path("stops", views.stops, name="stops"),
+    path("api/stops", views.stops_api, name="stops_api"),
+    path(
+        "shortest_route", views.ShortestRoute.as_view(), name="shortest_route"
+    ),
+    path("api/path", views.shortest_route_api, name="shortest_route_api"),
+    path("favourites", views.Favourites.as_view(), name="favourites"),
+    path("map", views.map, name="map"),
 ]
