@@ -7,7 +7,7 @@
   <h1 class="display-4 text-center my-5">Shortest route</h1>
 
   <div class="col-md-6 mx-auto">
-    {% for stop in shortest_route.stops %}
+    {% for stop in shortest_route.route %}
       <div class="card card-body mb-3">{{ stop.name }}</div>
     {% endfor %}
   </div>
