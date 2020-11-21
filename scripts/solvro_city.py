@@ -22,27 +22,27 @@ class Graph:
     def nodes(self):
         return set(sum(([edge.start, edge.end] for edge in self.edges), []))
 
-    def get_node_pairs(self, node1, node2, both_ends=True):
+    def get_node_pairs(self, node1, node2, undirected=True):
         node_pairs = [[node1, node2]]
-        if both_ends:
+        if undirected:
             node_pairs.append([node2, node1])
         return node_pairs
 
-    def remove_edge(self, node1, node2, both_ends=True):
-        node_pairs = self.get_node_pairs(node1, node2, both_ends)
+    def remove_edge(self, node1, node2, undirected=True):
+        node_pairs = self.get_node_pairs(node1, node2, undirected)
         edges = self.edges[:]
         for edge in edges:
             if [edge.start, edge.end] in node_pairs:
                 self.edges.remove(edge)
 
-    def add_edge(self, node1, node2, weight=1, both_ends=True):
-        node_pairs = self.get_node_pairs(node1, node2, both_ends)
+    def add_edge(self, node1, node2, weight=1, undirected=True):
+        node_pairs = self.get_node_pairs(node1, node2, undirected)
         for edge in self.edges:
             if [edge.start, edge.end] in node_pairs:
                 return ValueError(f"Edge {node1} {node2} already exists")
 
         self.edges.append(Edge(start=node1, end=node2, weight=weight))
-        if both_ends:
+        if undirected:
             self.edges.append(Edge(start=node2, end=node1, weight=weight))
 
     @property
@@ -97,16 +97,24 @@ class SolvroCity:
     Methods
     -------
     get_all_stops()
-        Returns array that contains objects with names of all stops.
+        Returns an array that contains objects with names of all stops.
     get_stop_id(name)
-        Returns stop id.
+        Returns a stop id.
     get_stop_name(id)
-        Returns stop name.
+        Returns a stop name.
     get_shortest_route(source_name, target_name)
-        Returns object that contains shortest route and distance between
+        Returns an object that contains shortest route and distance between
         two stops.
     get_all_links()
-        Returns array that contains all links between stops.
+        Returns an array that contains all links between stops.
+    cache_route(route, distance)
+        Caches the shortest route between source and target, to reduce the
+        amount of unnecessary calculations.
+    get_cached_route(source_name, target_name, undirected=True)
+        Returns cached shortest route and distance between source and
+        target.
+    get_all_cached_routes()
+        Returns all already cached routes.
     """
 
     solvro_map = ""
@@ -116,10 +124,12 @@ class SolvroCity:
         Parameters
         ----------
         path : str
-            The path to the JSON file with a city map.
+            The path to the directory where files with the city map and cashe
+            are stored.
         """
 
-        self.solvro_map = json.load(open(path, "r"))
+        self.path = path
+        self.solvro_map = json.load(open(path + "/solvro_city.json", "r"))
 
     def get_all_stops(self):
         """Returns array that contains objects with names of all stops."""
@@ -131,7 +141,7 @@ class SolvroCity:
         return output
 
     def get_stop_id(self, name):
-        """Returns stop id.
+        """Returns a stop id.
 
         Parameters
         ----------
@@ -182,8 +192,7 @@ class SolvroCity:
         raise ValueError("stop not found")
 
     def get_shortest_route(self, source_name, target_name):
-        """Returns object that contains shortest route and distance between
-        two stops.
+        """Returns shortest route and distance between two stops.
 
         Parameters
         ----------
@@ -216,6 +225,11 @@ class SolvroCity:
         if target_id is False:
             raise ValueError("target not found")
 
+        # check if route hasn't been cached
+        cached_route = self.get_cached_route(source_name, target_name)
+        if cached_route:
+            return cached_route
+
         # create a graph
         links = []
         for link in self.solvro_map["links"]:
@@ -225,19 +239,21 @@ class SolvroCity:
         # find shortest route
         dijkstra = graph.dijkstra(source_id, target_id)
         if not dijkstra["route"]:
-            # if it is impossible to get from source to destination, return False
+            # if source and target are not connected, return False
             return False
 
-        stops = []
+        route = []
         # format the output
         for stop_id in dijkstra["route"]:
-            stops.append({"name": self.get_stop_name(stop_id)})
+            route.append({"name": self.get_stop_name(stop_id)})
 
-        return {"stops": stops, "distance": dijkstra["distance"]}
+        # cache the route
+        self.cache_route(route, dijkstra["distance"])
 
-    # returns all links
+        return {"route": route, "distance": dijkstra["distance"]}
+
     def get_all_links(self):
-        """Returns array that contains all links between stops.
+        """Returns all links between stops.
 
         Returns
         -------
@@ -256,3 +272,72 @@ class SolvroCity:
                 }
             )
         return output
+
+    def cache_route(self, route, distance):
+        """Caches the shortest route between source and target, to reduce the
+        amount of unnecessary calculations.
+
+        Parameters
+        ----------
+        route : array
+            An array that contains names of visited stops from the source to
+            the target.
+        distance : int
+            Summary distance of the route.
+        """
+
+        routes = self.get_all_cached_routes()
+        routes.append({"route": route, "distance": distance})
+        open(self.path + "/cache.json", "w").write(json.dumps(routes))
+
+    def get_cached_route(self, source_name, target_name, undirected=True):
+        """Returns cached shortest route and distance between source and
+        target.
+
+        Parameters
+        ----------
+        source_name : str
+            Name of the source stop.
+        target_name : str
+            Name of the target stop.
+        undirected=True : bool
+            Indicates whether order of the source and the target is important.
+
+        Returns
+        -------
+        object
+            If route has been cached, an object that contains shortest route
+            and distance between source and target.
+        False
+            If route hasn't been cached.
+        """
+
+        try:
+            cached_routes = json.load(open(self.path + "/cache.json", "r"))
+            for cached_route in cached_routes:
+                if (
+                    cached_route["route"][0]["name"] == source_name
+                    and cached_route["route"][-1]["name"] == target_name
+                ) or (
+                    undirected
+                    and cached_route["route"][0]["name"] == target_name
+                    and cached_route["route"][-1]["name"] == source_name
+                ):
+                    return cached_route
+        except FileNotFoundError:
+            return False
+
+        return False
+
+    def get_all_cached_routes(self):
+        """Returns all already cached routes.
+
+        Returns
+        -------
+        array
+            An array that contains all cached routes.
+        """
+        try:
+            return json.load(open(self.path + "/cache.json", "r"))
+        except FileNotFoundError:
+            return []

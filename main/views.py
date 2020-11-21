@@ -83,19 +83,19 @@ def signout(request):
 
 
 def stops(request):
-    solvro = SolvroCity("scripts/solvro_city.json")
+    solvro = SolvroCity("scripts")
     return render(request, "main/stops.html", {"stops": solvro.get_all_stops()})
 
 
 def stops_api(request):
-    solvro = SolvroCity("scripts/solvro_city.json")
+    solvro = SolvroCity("scripts")
     return HttpResponse(
         json.dumps(solvro.get_all_stops()), content_type="application/json"
     )
 
 
 def shortest_route(request):
-    solvro = SolvroCity("scripts/solvro_city.json")
+    solvro = SolvroCity("scripts")
     if request.method == "GET":
         # show the form
         return render(
@@ -133,7 +133,7 @@ def shortest_route(request):
 
 def shortest_route_api(request):
     try:
-        solvro = SolvroCity("scripts/solvro_city.json")
+        solvro = SolvroCity("scripts")
 
         # validate GET parameters
         source = request.GET.get("source")
@@ -178,7 +178,7 @@ def favourites(request):
 
 
 def map(request):
-    solvro = SolvroCity("scripts/solvro_city.json")
+    solvro = SolvroCity("scripts")
     return render(
         request,
         "main/map.html",
