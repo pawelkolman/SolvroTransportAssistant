@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.http import HttpResponse, HttpResponseBadRequest
 from users.models import CustomUser
 from django.db import IntegrityError
@@ -23,6 +24,9 @@ def signup(request):
     else:
         # validate data
         try:
+            # validate email
+            validate_email(request.POST.get("email"))
+
             # add a new user
             user = CustomUser.objects.create_user(
                 email=request.POST.get("email"),
