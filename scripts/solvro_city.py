@@ -12,38 +12,34 @@ class Graph:
     """A class used to handle graphs, containing shortest route algorithm."""
 
     def __init__(self, edges):
-        wrong_edges = [edge for edge in edges if len(edge) not in [2, 3]]
-        if wrong_edges:
-            raise ValueError(f"Wrong edges detected: {wrong_edges}")
-
         self.edges = [make_edge(*edge) for edge in edges]
 
     @property
     def nodes(self):
         return set(sum(([edge.start, edge.end] for edge in self.edges), []))
 
-    def get_node_pairs(self, node1, node2, undirected=True):
-        node_pairs = [[node1, node2]]
-        if undirected:
-            node_pairs.append([node2, node1])
-        return node_pairs
-
-    def remove_edge(self, node1, node2, undirected=True):
-        node_pairs = self.get_node_pairs(node1, node2, undirected)
-        edges = self.edges[:]
-        for edge in edges:
-            if [edge.start, edge.end] in node_pairs:
-                self.edges.remove(edge)
-
-    def add_edge(self, node1, node2, weight=1, undirected=True):
-        node_pairs = self.get_node_pairs(node1, node2, undirected)
-        for edge in self.edges:
-            if [edge.start, edge.end] in node_pairs:
-                return ValueError(f"Edge {node1} {node2} already exists")
-
-        self.edges.append(Edge(start=node1, end=node2, weight=weight))
-        if undirected:
-            self.edges.append(Edge(start=node2, end=node1, weight=weight))
+    # def get_node_pairs(self, node1, node2, undirected=True):
+    #     node_pairs = [[node1, node2]]
+    #     if undirected:
+    #         node_pairs.append([node2, node1])
+    #     return node_pairs
+    #
+    # def remove_edge(self, node1, node2, undirected=True):
+    #     node_pairs = self.get_node_pairs(node1, node2, undirected)
+    #     edges = self.edges[:]
+    #     for edge in edges:
+    #         if [edge.start, edge.end] in node_pairs:
+    #             self.edges.remove(edge)
+    #
+    # def add_edge(self, node1, node2, weight=1, undirected=True):
+    #     node_pairs = self.get_node_pairs(node1, node2, undirected)
+    #     for edge in self.edges:
+    #         if [edge.start, edge.end] in node_pairs:
+    #             return ValueError(f"Edge {node1} {node2} already exists")
+    #
+    #     self.edges.append(Edge(start=node1, end=node2, weight=weight))
+    #     if undirected:
+    #         self.edges.append(Edge(start=node2, end=node1, weight=weight))
 
     @property
     def neighbours(self):
