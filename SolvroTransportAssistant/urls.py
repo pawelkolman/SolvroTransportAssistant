@@ -19,14 +19,16 @@ from main import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.home, name="home"),
+    path("", views.Home.as_view(), name="home"),
     path("user/", include("users.urls")),
-    path("stops", views.stops, name="stops"),
-    path("api/stops", views.stops_api, name="stops_api"),
+    path("stops", views.Stops.as_view(), name="stops"),
+    path("api/stops", views.StopsAPI.as_view(), name="stops_api"),
     path(
         "shortest_route", views.ShortestRoute.as_view(), name="shortest_route"
     ),
-    path("api/path", views.shortest_route_api, name="shortest_route_api"),
+    path(
+        "api/path", views.ShortestRouteAPI.as_view(), name="shortest_route_api"
+    ),
     path("favourites", views.Favourites.as_view(), name="favourites"),
-    path("map", views.map, name="map"),
+    path("map", views.Map.as_view(), name="map"),
 ]

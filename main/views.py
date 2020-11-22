@@ -6,24 +6,33 @@ from .forms import FavouriteForm
 from .models import Favourite
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import views
+from rest_framework.response import Response
+from .serializers import StopsSerializer, ShortestRouteSerializer
 import json
 import re
 
 
-def home(request):
-    return render(request, "main/home.html")
+class Home(View):
+    def get(self, request):
+        return render(request, "main/home.html")
 
 
-def stops(request):
-    solvro = SolvroCity("scripts")
-    return render(request, "main/stops.html", {"stops": solvro.get_all_stops()})
+class Stops(View):
+    def get(self, request):
+        solvro = SolvroCity("scripts")
+        return render(
+            request, "main/stops.html", {"stops": solvro.get_all_stops()}
+        )
 
 
-def stops_api(request):
-    solvro = SolvroCity("scripts")
-    return HttpResponse(
-        json.dumps(solvro.get_all_stops()), content_type="application/json"
-    )
+class StopsAPI(views.APIView):
+    def get(self, request):
+        solvro = SolvroCity("scripts")
+
+        data = solvro.get_all_stops()
+        result = StopsSerializer(data, many=True).data
+        return Response(result)
 
 
 class ShortestRoute(View):
@@ -68,25 +77,26 @@ class ShortestRoute(View):
             )
 
 
-def shortest_route_api(request):
-    try:
-        solvro = SolvroCity("scripts")
+class ShortestRouteAPI(views.APIView):
+    def get(self, request):
+        try:
+            solvro = SolvroCity("scripts")
 
-        # validate GET parameters
-        source = request.GET.get("source")
-        target = request.GET.get("target")
+            # validate GET parameters
+            source = request.GET.get("source")
+            target = request.GET.get("target")
 
-        # check if stops exists
-        solvro.get_stop_id(source)
-        solvro.get_stop_id(target)
+            # check if stops exists
+            solvro.get_stop_id(source)
+            solvro.get_stop_id(target)
 
-        # return json
-        return HttpResponse(
-            json.dumps(solvro.get_shortest_route(source, target)),
-            content_type="application/json",
-        )
-    except ValueError:
-        return HttpResponseBadRequest()
+            data = solvro.get_shortest_route(source, target)
+            result = ShortestRouteSerializer(data).data
+            return Response(result)
+        except ValueError:
+            return Response(
+                ShortestRouteSerializer({"distance": 0, "route": []}).data
+            )
 
 
 class Favourites(LoginRequiredMixin, View):
@@ -114,10 +124,11 @@ class Favourites(LoginRequiredMixin, View):
             return redirect("home")
 
 
-def map(request):
-    solvro = SolvroCity("scripts")
-    return render(
-        request,
-        "main/map.html",
-        {"stops": solvro.get_all_stops(), "links": solvro.get_all_links()},
-    )
+class Map(View):
+    def get(self, request):
+        solvro = SolvroCity("scripts")
+        return render(
+            request,
+            "main/map.html",
+            {"stops": solvro.get_all_stops(), "links": solvro.get_all_links()},
+        )
