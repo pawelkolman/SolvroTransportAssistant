@@ -18,29 +18,6 @@ class Graph:
     def nodes(self):
         return set(sum(([edge.start, edge.end] for edge in self.edges), []))
 
-    # def get_node_pairs(self, node1, node2, undirected=True):
-    #     node_pairs = [[node1, node2]]
-    #     if undirected:
-    #         node_pairs.append([node2, node1])
-    #     return node_pairs
-    #
-    # def remove_edge(self, node1, node2, undirected=True):
-    #     node_pairs = self.get_node_pairs(node1, node2, undirected)
-    #     edges = self.edges[:]
-    #     for edge in edges:
-    #         if [edge.start, edge.end] in node_pairs:
-    #             self.edges.remove(edge)
-    #
-    # def add_edge(self, node1, node2, weight=1, undirected=True):
-    #     node_pairs = self.get_node_pairs(node1, node2, undirected)
-    #     for edge in self.edges:
-    #         if [edge.start, edge.end] in node_pairs:
-    #             return ValueError(f"Edge {node1} {node2} already exists")
-    #
-    #     self.edges.append(Edge(start=node1, end=node2, weight=weight))
-    #     if undirected:
-    #         self.edges.append(Edge(start=node2, end=node1, weight=weight))
-
     @property
     def neighbours(self):
         neighbours = {node: set() for node in self.nodes}
@@ -113,9 +90,10 @@ class SolvroCity:
         Returns all already cached routes.
     """
 
-    solvro_map = ""
+    map = None
+    graph = None
 
-    def __init__(self, path):
+    def __init__(self, path, map_name="solvro_city"):
         """
         Parameters
         ----------
@@ -125,13 +103,22 @@ class SolvroCity:
         """
 
         self.path = path
-        self.solvro_map = json.load(open(path + "/solvro_city.json", "r"))
+        self.map = json.load(open(path + "/" + map_name + ".json", "r"))
+
+    def create_graph(self):
+        """Creates a graph that contains Solvro City stops and links between
+        them."""
+
+        links = []
+        for link in self.map["links"]:
+            links.append([link["source"], link["target"], link["distance"]])
+        self.graph = Graph(links)
 
     def get_all_stops(self):
         """Returns array that contains objects with names of all stops."""
 
         output = []
-        for node in self.solvro_map["nodes"]:
+        for node in self.map["nodes"]:
             # format the output
             output.append({"name": node["stop_name"]})
         return output
@@ -155,7 +142,7 @@ class SolvroCity:
             If stop with provided name doesn't exist.
         """
 
-        for node in self.solvro_map["nodes"]:
+        for node in self.map["nodes"]:
             if (
                 isinstance(name, str)
                 and name.upper() == node["stop_name"].upper()
@@ -182,7 +169,7 @@ class SolvroCity:
             If stop with provided id doesn't exist.
         """
 
-        for node in self.solvro_map["nodes"]:
+        for node in self.map["nodes"]:
             if id == node["id"]:
                 return node["stop_name"]
         raise ValueError("stop not found")
@@ -226,14 +213,12 @@ class SolvroCity:
         if cached_route:
             return cached_route
 
-        # create a graph
-        links = []
-        for link in self.solvro_map["links"]:
-            links.append([link["source"], link["target"], link["distance"]])
-        graph = Graph(links)
+        # create a graph if doesn't exist
+        if not self.graph:
+            self.create_graph()
 
         # find shortest route
-        dijkstra = graph.dijkstra(source_id, target_id)
+        dijkstra = self.graph.dijkstra(source_id, target_id)
         if not dijkstra["route"]:
             # if source and target are not connected, return False
             return False
@@ -258,7 +243,7 @@ class SolvroCity:
         """
 
         output = []
-        for link in self.solvro_map["links"]:
+        for link in self.map["links"]:
             # format the output
             output.append(
                 {

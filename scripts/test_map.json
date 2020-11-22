@@ -1,0 +1,64 @@
+{
+    "links": [
+        {
+            "distance": 2,
+            "source": 0,
+            "target": 1
+        },
+        {
+            "distance": 4,
+            "source": 1,
+            "target": 2
+        },
+        {
+            "distance": 1,
+            "source": 2,
+            "target": 3
+        },
+        {
+            "distance": 10,
+            "source": 3,
+            "target": 4
+        },
+        {
+            "distance": 0,
+            "source": 4,
+            "target": 5
+        },
+        {
+            "distance": 120,
+            "source": 5,
+            "target": 6
+        }
+    ],
+    "nodes": [
+        {
+            "id": 0,
+            "stop_name": "zero"
+        },
+        {
+            "id": 1,
+            "stop_name": "one"
+        },
+        {
+            "id": 2,
+            "stop_name": "two"
+        },
+        {
+            "id": 3,
+            "stop_name": "three"
+        },
+        {
+            "id": 4,
+            "stop_name": "four"
+        },
+        {
+            "id": 5,
+            "stop_name": "five"
+        },
+        {
+            "id": 6,
+            "stop_name": "six"
+        }
+    ]
+}
