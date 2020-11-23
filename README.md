@@ -8,6 +8,7 @@
 - [General info](#general)
 - [Technologies](#technologies)
 - [Live version](#live)
+- [Installation](#installation)
 - [Features](#features)
 - [API](#api)
 - [Problem solution](#solution)
@@ -20,13 +21,35 @@ This is a simple application that searches for the shortest route between two st
 
 <a name="technologies"></a>
 ## Technologies
-- Python, Django
+- Python, Django, Django REST framework
 - HTML, CSS, Bootstrap
 
 
 <a name="live"></a>
 ## Live version
 Live version of this app is available [here](https://SolvroTransportAssistant.pythonanywhere.com).
+
+
+<a name="installation"></a>
+## Installation
+Clone the repository
+```bash
+git clone https://github.com/pawelkolman/SolvroTransportAssistant.git
+```
+
+Install dependencies
+```bash
+cd SolvroTransportAssistant
+pip install -r requirements.txt
+```
+
+Run the server
+```bash
+python manage.py runserver
+```
+
+Navigate to `http://localhost:8000`
+
 
 
 <a name="features"></a>
